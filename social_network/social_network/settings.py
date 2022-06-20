@@ -24,7 +24,12 @@ SECRET_KEY = 'vzd_%0-cu$xi#d$lsu!!47d)=@#t7y()@0b6kr_-=*)^o04b(y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    'testserver',
+]
 
 # Application definition
 
@@ -108,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Login/logout URLS
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
-LOGOUT_REDIRECT_URL = 'posts:index'
+# LOGOUT_REDIRECT_URL = 'posts:index'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
