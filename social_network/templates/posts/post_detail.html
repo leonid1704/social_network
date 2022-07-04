@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} {{ title }} {% endblock %}
 {% block content %}
+{% load thumbnail %}
       <div class="row">
         <aside class="col-12 col-md-3">
           <ul class="list-group list-group-flush">
@@ -30,9 +31,17 @@
           </ul>
         </aside>
         <article class="col-12 col-md-9">
+          {% thumbnail post.image "1240x827" crop="center" upscale=True as im %}
+            <img class="card-img my-2" src="{{ im.url }}">
+          {% endthumbnail %}
           <p>
             {{ post.text }}
           </p>
+          {% if user == post.author %}
+          <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+              Edit post
+          </a>
+          {% endif %}
         </article>
       </div>
 {% endblock %}

@@ -59,7 +59,7 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, files=request.FILES or None)
         if form.is_valid():
             new_post = form.save(commit=False)
             new_post.author = request.user
@@ -74,14 +74,13 @@ def post_create(request):
 def post_edit(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if post.author == request.user:
-        form = PostForm(request.POST or None, instance=post)
+        form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
         is_edit = True
         if form.is_valid():
             form.save()
             return redirect('posts:profile', username=request.user.username)
         return render(request, 'posts/create_post.html', {'form': form, 'is_edit': is_edit, 'post_id': post_id})
     return redirect('posts:post_detail', post_id=post_id)
-
 
 # TODO Разобраться с профайлом и пост деталями. Можно красивее!
 # TODO Разобраться с тэмплейтами. Можно красивее!
