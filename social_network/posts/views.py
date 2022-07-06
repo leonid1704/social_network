@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import PostForm
-from .models import Post, Group, User
+from .forms import PostForm, CommentForm
+from .models import Post, Group, User, Comment
 
 
 def index(request):
@@ -48,10 +48,14 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     author_posts = Post.objects.filter(author=post.author)
     title = post.text[:30]
+    comment_form = CommentForm(request.POST or None)
+    post_comments = Comment.objects.filter(post=post)
     context = {
         'post': post,
         'author_posts': author_posts,
         'title': title,
+        'comment_form': comment_form,
+        'post_comments': post_comments,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -80,6 +84,18 @@ def post_edit(request, post_id):
             form.save()
             return redirect('posts:profile', username=request.user.username)
         return render(request, 'posts/create_post.html', {'form': form, 'is_edit': is_edit, 'post_id': post_id})
+    return redirect('posts:post_detail', post_id=post_id)
+
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
     return redirect('posts:post_detail', post_id=post_id)
 
 # TODO Разобраться с профайлом и пост деталями. Можно красивее!
