@@ -3,3 +3,4 @@ Django==4.0.4
 sqlparse==0.4.2
 pillow==9.1.1
 sorl-thumbnail==12.8.0
+django-debug-toolbar==3.5.0
